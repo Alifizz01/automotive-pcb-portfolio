@@ -1,0 +1,19 @@
+# Altium working files
+History/
+__Previews/
+Project Logs for */
+*.PrjPcbStructure
+*.~*.Zip
+
+# Generated DelphiScript, and the copy the runner deploys into the script project
+build_sheet*.pas
+wire.pas
+HatScript.pas
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+Thumbs.db
+desktop.ini

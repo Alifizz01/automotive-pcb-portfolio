@@ -1,0 +1,136 @@
+LIBRARY|C:\Users\Nitrox\OneDrive\Desktop\Altium_Portfolio\01-CAN-Sniffer-HAT\hardware\CAN_Sniffer_HAT.SchLib
+SYMBOL|MCP2518FD|CAN FD controller, SPI, 8 Mbit/s, SOIC-14|1
+PIN|13|C\S\|eElectricInput|eRotate180|0|0|1|300|1|1
+PIN|10|SCK|eElectricInput|eRotate180|0|-100|1|300|1|1
+PIN|11|SDI|eElectricInput|eRotate180|0|-200|1|300|1|1
+PIN|12|SDO|eElectricOutput|eRotate180|0|-300|1|300|1|1
+PIN|4|I\N\T\|eElectricOutput|eRotate180|0|-500|1|300|1|1
+PIN|14|VDD|eElectricPower|eRotate180|0|-700|1|300|1|1
+PIN|7|VSS|eElectricPower|eRotate180|0|-800|1|300|1|1
+PIN|1|TXCAN|eElectricOutput|eRotate0|900|0|1|300|1|1
+PIN|2|RXCAN|eElectricInput|eRotate0|900|-100|1|300|1|1
+PIN|6|OSC1|eElectricInput|eRotate0|900|-300|1|300|1|1
+PIN|5|OSC2|eElectricOutput|eRotate0|900|-400|1|300|1|1
+PIN|3|CLKO/SOF|eElectricOutput|eRotate0|900|-500|1|300|1|1
+PIN|8|INT1/GPIO1|eElectricIO|eRotate0|900|-700|1|300|1|1
+PIN|9|INT0/GPIO0/XSTBY|eElectricIO|eRotate0|900|-800|1|300|1|1
+SYMBOL|MCP2562FD|CAN FD transceiver with VIO level shift, SOIC-8|1
+PIN|1|TXD|eElectricInput|eRotate180|0|0|1|300|1|1
+PIN|4|RXD|eElectricOutput|eRotate180|0|-100|1|300|1|1
+PIN|8|STBY|eElectricInput|eRotate180|0|-300|1|300|1|1
+PIN|3|VDD|eElectricPower|eRotate180|0|-500|1|300|1|1
+PIN|5|VIO|eElectricPower|eRotate180|0|-600|1|300|1|1
+PIN|2|VSS|eElectricPower|eRotate180|0|-700|1|300|1|1
+PIN|7|CANH|eElectricIO|eRotate0|700|0|1|300|1|1
+PIN|6|CANL|eElectricIO|eRotate0|700|-100|1|300|1|1
+SYMBOL|CAT24C32|32 kbit I2C EEPROM, 16-bit addressing, HAT ID EEPROM, SOIC-8|1
+PIN|5|SDA|eElectricIO|eRotate180|0|0|1|300|1|1
+PIN|6|SCL|eElectricInput|eRotate180|0|-100|1|300|1|1
+PIN|7|WP|eElectricInput|eRotate180|0|-300|1|300|1|1
+PIN|1|A0|eElectricInput|eRotate180|0|-500|1|300|1|1
+PIN|2|A1|eElectricInput|eRotate180|0|-600|1|300|1|1
+PIN|3|A2|eElectricInput|eRotate180|0|-700|1|300|1|1
+PIN|8|VCC|eElectricPower|eRotate0|600|0|1|300|1|1
+PIN|4|VSS|eElectricPower|eRotate0|600|-100|1|300|1|1
+SYMBOL|RES|Resistor, 0805|1
+PIN|1|1|eElectricPassive|eRotate180|0|0|1|100|0|0
+PIN|2|2|eElectricPassive|eRotate0|300|0|1|100|0|0
+GRAPHIC|rectangle|1|1|0|0|-50|300|50
+SYMBOL|CAP|Capacitor, non-polarised, 0805|1
+PIN|1|1|eElectricPassive|eRotate180|130|0|1|130|0|0
+PIN|2|2|eElectricPassive|eRotate0|170|0|1|130|0|0
+GRAPHIC|line|1|2|130|-80|130|80
+GRAPHIC|line|1|2|170|-80|170|80
+SYMBOL|LED|LED, 0805|1
+PIN|1|A|eElectricPassive|eRotate180|0|0|1|100|0|0
+PIN|2|K|eElectricPassive|eRotate0|300|0|1|100|0|0
+GRAPHIC|polygon|1|1|1|100|-80|100|80|220|0
+GRAPHIC|line|1|2|220|-80|220|80
+GRAPHIC|polyline|1|1|130|100|180|150
+GRAPHIC|polyline|1|1|150|90|200|140
+SYMBOL|CRYSTAL|40 MHz crystal, 3.2 x 2.5 mm 4-pad, case pads grounded|1
+PIN|1|XI|eElectricPassive|eRotate180|0|0|1|300|1|1
+PIN|2|GND|eElectricPassive|eRotate180|0|-100|1|300|1|1
+PIN|3|XO|eElectricPassive|eRotate0|400|0|1|300|1|1
+PIN|4|GND|eElectricPassive|eRotate0|400|-100|1|300|1|1
+SYMBOL|JUMPER2|2-pin header with shunt, 2.54 mm|1
+PIN|1|1|eElectricPassive|eRotate180|0|0|1|100|0|1
+PIN|2|2|eElectricPassive|eRotate0|300|0|1|100|0|1
+GRAPHIC|rectangle|1|1|0|0|-60|300|60
+SYMBOL|TESTPOINT|Test point / probe pad|1
+PIN|1|TP|eElectricPassive|eRotate180|0|0|1|100|0|0
+GRAPHIC|ellipse|1|1|1|50|0|50|50
+SYMBOL|HDR_2X20_PI|Raspberry Pi 40-pin GPIO header, 2x20, 2.54 mm|1
+PIN|1|3V3|eElectricPassive|eRotate180|0|0|1|300|1|1
+PIN|2|5V|eElectricPassive|eRotate0|900|0|1|300|1|1
+PIN|3|GPIO2|eElectricPassive|eRotate180|0|-100|1|300|1|1
+PIN|4|5V|eElectricPassive|eRotate0|900|-100|1|300|1|1
+PIN|5|GPIO3|eElectricPassive|eRotate180|0|-200|1|300|1|1
+PIN|6|GND|eElectricPassive|eRotate0|900|-200|1|300|1|1
+PIN|7|GPIO4|eElectricPassive|eRotate180|0|-300|1|300|1|1
+PIN|8|GPIO14|eElectricPassive|eRotate0|900|-300|1|300|1|1
+PIN|9|GND|eElectricPassive|eRotate180|0|-400|1|300|1|1
+PIN|10|GPIO15|eElectricPassive|eRotate0|900|-400|1|300|1|1
+PIN|11|GPIO17|eElectricPassive|eRotate180|0|-500|1|300|1|1
+PIN|12|GPIO18|eElectricPassive|eRotate0|900|-500|1|300|1|1
+PIN|13|GPIO27|eElectricPassive|eRotate180|0|-600|1|300|1|1
+PIN|14|GND|eElectricPassive|eRotate0|900|-600|1|300|1|1
+PIN|15|GPIO22|eElectricPassive|eRotate180|0|-700|1|300|1|1
+PIN|16|GPIO23|eElectricPassive|eRotate0|900|-700|1|300|1|1
+PIN|17|3V3|eElectricPassive|eRotate180|0|-800|1|300|1|1
+PIN|18|GPIO24|eElectricPassive|eRotate0|900|-800|1|300|1|1
+PIN|19|GPIO10|eElectricPassive|eRotate180|0|-900|1|300|1|1
+PIN|20|GND|eElectricPassive|eRotate0|900|-900|1|300|1|1
+PIN|21|GPIO9|eElectricPassive|eRotate180|0|-1000|1|300|1|1
+PIN|22|GPIO25|eElectricPassive|eRotate0|900|-1000|1|300|1|1
+PIN|23|GPIO11|eElectricPassive|eRotate180|0|-1100|1|300|1|1
+PIN|24|GPIO8|eElectricPassive|eRotate0|900|-1100|1|300|1|1
+PIN|25|GND|eElectricPassive|eRotate180|0|-1200|1|300|1|1
+PIN|26|GPIO7|eElectricPassive|eRotate0|900|-1200|1|300|1|1
+PIN|27|ID_SD|eElectricPassive|eRotate180|0|-1300|1|300|1|1
+PIN|28|ID_SC|eElectricPassive|eRotate0|900|-1300|1|300|1|1
+PIN|29|GPIO5|eElectricPassive|eRotate180|0|-1400|1|300|1|1
+PIN|30|GND|eElectricPassive|eRotate0|900|-1400|1|300|1|1
+PIN|31|GPIO6|eElectricPassive|eRotate180|0|-1500|1|300|1|1
+PIN|32|GPIO12|eElectricPassive|eRotate0|900|-1500|1|300|1|1
+PIN|33|GPIO13|eElectricPassive|eRotate180|0|-1600|1|300|1|1
+PIN|34|GND|eElectricPassive|eRotate0|900|-1600|1|300|1|1
+PIN|35|GPIO19|eElectricPassive|eRotate180|0|-1700|1|300|1|1
+PIN|36|GPIO16|eElectricPassive|eRotate0|900|-1700|1|300|1|1
+PIN|37|GPIO26|eElectricPassive|eRotate180|0|-1800|1|300|1|1
+PIN|38|GPIO20|eElectricPassive|eRotate0|900|-1800|1|300|1|1
+PIN|39|GND|eElectricPassive|eRotate180|0|-1900|1|300|1|1
+PIN|40|GPIO21|eElectricPassive|eRotate0|900|-1900|1|300|1|1
+SYMBOL|HDR_2X12_BRK|GPIO breakout header, 2x12, 2.54 mm - all 21 unused Pi GPIO|1
+PIN|1|GPIO2|eElectricPassive|eRotate180|0|0|1|300|1|1
+PIN|2|GPIO3|eElectricPassive|eRotate0|900|0|1|300|1|1
+PIN|3|GPIO4|eElectricPassive|eRotate180|0|-100|1|300|1|1
+PIN|4|GPIO5|eElectricPassive|eRotate0|900|-100|1|300|1|1
+PIN|5|GPIO6|eElectricPassive|eRotate180|0|-200|1|300|1|1
+PIN|6|GPIO7|eElectricPassive|eRotate0|900|-200|1|300|1|1
+PIN|7|GPIO12|eElectricPassive|eRotate180|0|-300|1|300|1|1
+PIN|8|GPIO13|eElectricPassive|eRotate0|900|-300|1|300|1|1
+PIN|9|GPIO14|eElectricPassive|eRotate180|0|-400|1|300|1|1
+PIN|10|GPIO15|eElectricPassive|eRotate0|900|-400|1|300|1|1
+PIN|11|GPIO16|eElectricPassive|eRotate180|0|-500|1|300|1|1
+PIN|12|GPIO17|eElectricPassive|eRotate0|900|-500|1|300|1|1
+PIN|13|GPIO18|eElectricPassive|eRotate180|0|-600|1|300|1|1
+PIN|14|GPIO19|eElectricPassive|eRotate0|900|-600|1|300|1|1
+PIN|15|GPIO20|eElectricPassive|eRotate180|0|-700|1|300|1|1
+PIN|16|GPIO21|eElectricPassive|eRotate0|900|-700|1|300|1|1
+PIN|17|GPIO22|eElectricPassive|eRotate180|0|-800|1|300|1|1
+PIN|18|GPIO23|eElectricPassive|eRotate0|900|-800|1|300|1|1
+PIN|19|GPIO24|eElectricPassive|eRotate180|0|-900|1|300|1|1
+PIN|20|GPIO26|eElectricPassive|eRotate0|900|-900|1|300|1|1
+PIN|21|GPIO27|eElectricPassive|eRotate180|0|-1000|1|300|1|1
+PIN|22|3V3|eElectricPassive|eRotate0|900|-1000|1|300|1|1
+PIN|23|GND|eElectricPassive|eRotate180|0|-1100|1|300|1|1
+PIN|24|GND|eElectricPassive|eRotate0|900|-1100|1|300|1|1
+SYMBOL|SCREWTERM_3|Pluggable screw terminal, 3 position, 3.5 mm pitch|1
+PIN|1|CAN_H|eElectricPassive|eRotate180|0|0|1|300|1|1
+PIN|2|CAN_L|eElectricPassive|eRotate180|0|-100|1|300|1|1
+PIN|3|GND|eElectricPassive|eRotate180|0|-200|1|300|1|1
+GRAPHIC|rectangle|1|1|0|0|-300|400|100
+GRAPHIC|ellipse|1|1|0|200|0|60|60
+GRAPHIC|ellipse|1|1|0|200|-100|60|60
+GRAPHIC|ellipse|1|1|0|200|-200|60|60
