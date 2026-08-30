@@ -96,14 +96,15 @@ the left is what makes the device outlive the ignition.
 | **U7** | Buck-boost to 3.3 V | A LiFePO4 cell runs from about 3.65 V down to 2.5 V, so 3.3 V sits inside the range. A plain buck browns out at the bottom of the discharge and a plain boost cannot start at the top. Buck-boost is the only correct answer here. | ER-06, FR-15 |
 | **U8** | Boost to 5 V, transceivers only | The MCP2562FD needs 4.5 to 5.5 V on VDD. Chosen with a low quiescent current mode, because in watch mode it feeds two transceivers drawing 5 uA each and its own quiescent current then dominates. | ER-06 |
 | **U9** | Fuel gauge | ER-13 wants remaining runtime predicted to 20 %. Cell voltage alone does not do that on LiFePO4, whose discharge curve is famously flat. A coulomb-counting gauge does. | FR-18, ER-13 |
-| **U10** | RTC with temperature-compensated oscillator, plus a backup cell | FR-11 wants absolute time across sessions, and the overnight quiet test compares timestamps against wall-clock hours. A TCXO-based RTC holds a few ppm where a bare 32.768 kHz crystal drifts 20 ppm or worse over a hot day. | FR-11, ER-08 |
+| **U10** | Micro Crystal **RV-3028-C7** | An RTC module with **the crystal built in**, so it removes a part rather than adding one. Factory calibrated to **1 ppm at 25 C** against a 30 ppm requirement, and it runs on **45 nA**, which is under a thousandth of the watch-mode budget. FR-11 wants absolute time to survive on a backup cell for months, and at 45 nA it effectively does. | FR-11, ER-08 |
 | **J1, J2** | 2 x DB9 male, CiA 303-1 pinout | One per channel, with V+ on pin 9. The vehicle-specific wiring moves into a cable, so the device is not tied to one connector standard and works on a bench too. | FR-02 |
 | **J4** | USB-C receptacle, USB 2.0 full speed | Presents the SD card to a PC as a drive (FR-19) and charges the cell on a bench (FR-21). Full speed gives about 1 MB/s, which suits configuration and short sessions; bulk transfers still want the card reader. | FR-19, FR-21 |
 | **J3** | microSD socket, push-push, card-detect | Card detect matters: SR-05 has to notice a card removed mid-session, and a switch is the only way to know. | FR-03, SR-05, MR-03 |
 | **DS1** | Display, SPI | Trade-off open, see Q-3. | FR-07, FR-08, MR-02 |
 
-**Nothing enters the BOM without a datasheet (C-03).** Confirmed so far: the MCP2562FD, from
-the datasheet already committed in project 01, and the STM32H563 family specification. The
+**Nothing enters the BOM without a datasheet (C-03).** Three are now committed in
+`docs/datasheets/`: **STM32H563** (ST DS14258, the combined H562/H563 datasheet),
+**MCP2562FD**, and **RV-3028-C7**. The
 power chain parts are named by function above. Section 12 gives a first choice for each with
 the property that decided it, and every one still needs its datasheet in `docs/datasheets/`
 before Gate 2.
@@ -114,8 +115,10 @@ The STM32H562 and STM32H563 share one datasheet, and the published difference is
 given as TrustZone and an Ethernet MAC, neither of which this design needs. That makes the
 H562 look like the obvious saving.
 
-It is not, and the pin map is what shows it. Checked across every H562 package, **no H562
-part has FDCAN2 at all**. It carries one CAN-FD controller. Every H563 package carries two.
+It is not, and the peripheral count is what shows it. The pin definitions gave it away first,
+since no H562 package has an FDCAN2 pin at all, and **ST's own datasheet confirms it**: the
+feature comparison table in DS14258 lists FDCAN as **2 for every H563 part and 1 for every
+H562 part**.
 
 ```
 STM32H562, all packages   FDCAN1 only
@@ -260,13 +263,13 @@ datasheet maximum before Gate 2, using the parts named in section 12.
 ```
 MCU in stop mode, RTC running          ~  50 uA   (estimate)
 2x transceiver in standby              ~  10 uA   (datasheet: 5 uA typ each)
-RTC                                    ~   3 uA   (estimate)
+RTC RV-3028-C7                         ~ 0.05 uA  (datasheet: 45 nA at 3 V)
 fuel gauge                             ~  20 uA   (estimate)
 buck-boost quiescent                   ~  30 uA   (estimate)
 5 V boost quiescent                    ~  20 uA   (estimate)
 display, image retained                ~  10 uA   (estimate, memory LCD)
                                           ------
-total watch current                    ~ 143 uA
+total watch current                    ~ 140 uA
 ```
 
 ```
@@ -505,7 +508,7 @@ price still have to be checked per MFR-04. Where a part is unconfirmed, it says 
 | Fuel gauge | ADI **LTC2942** | A pure coulomb counter. See the reasoning below. | Candidate, needs datasheet |
 | Buck-boost to 3.3 V | TI **TPS63802** class | Must start at 3.65 V and hold 3.3 V down to 2.5 V, and must have a low-Iq mode for the watch state. | Unconfirmed, needs datasheet |
 | Boost to 5 V, transceivers only | Low-Iq boost | In watch mode it feeds two transceivers drawing 5 uA each, so **its own quiescent current is the whole budget**. Pick on Iq, not on efficiency at full load. | Unconfirmed, needs datasheet |
-| RTC | Low-power TCXO RTC | ER-08 wants a few ppm across a hot car, and FR-11 wants it running on a backup cell for months. | Unconfirmed, needs datasheet |
+| RTC | Micro Crystal **RV-3028-C7** | 1 ppm at 25 C, 45 nA, and the crystal is inside the module. | **Datasheet committed** |
 | ESD protection | TVS arrays on both CAN pairs, USB and supply | ER-14. | Unconfirmed |
 
 ### Two findings that changed the design
@@ -591,13 +594,20 @@ therefore feeds everything.
 without awkward ratios. The value is confirmed in CubeMX's Clock Configuration tab, which
 turns a field red when a peripheral cannot be given a legal frequency.
 
-### Two separate crystals, deliberately
+### Two clocks, but only one crystal on the board
 
-The 32.768 kHz crystal for the real-time clock is **not** the same part and not the same job.
-The HSE crystal runs the chip and stops when the chip sleeps. The 32.768 kHz crystal keeps
-wall-clock time running on the backup cell while everything else is off, which is FR-11. A
-device that watches a bus overnight and reports "the bus woke at 03:14" needs to know what
+There are two timekeeping jobs here and they are not the same.
+
+The **HSE crystal** runs the chip, and it stops when the chip sleeps. The **real-time clock**
+keeps wall-clock time on the backup cell while everything else is off, which is FR-11. A
+device that watches a bus overnight and reports "the bus woke at 03:14" has to know what
 03:14 means.
+
+Normally that means a second crystal, a 32.768 kHz part with its own load capacitors. The
+**RV-3028-C7 chosen in section 2 has its crystal built into the module**, hermetically sealed
+with the oscillator, so the second crystal and its two capacitors disappear from the BOM
+entirely. It is also **1 ppm at 25 C**, which is better than the HSE crystal will be, so the
+fast timebase can be disciplined against it rather than the other way round.
 
 ### What is not decided yet
 
