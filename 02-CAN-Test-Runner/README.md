@@ -1,8 +1,9 @@
 # CAN-FD Test Runner
 
-A handheld device that plugs into a car's OBD-II port, runs a **test you wrote beforehand**
+A handheld device that connects to a car's OBD-II port, runs a **test you wrote beforehand**
 for the length of a drive, and ends with a verdict: **PASSED**, **FAILED**, or
-**INCOMPLETE**.
+**INCOMPLETE**. Two CAN-FD channels on DB9 connectors, its own battery so the test survives
+key-off, and a USB port so the logs come off without touching the card.
 
 > **Note on method.** The requirements and architecture for this board were developed in
 > discussion with an AI assistant. Every figure in them is either derived in the document
@@ -94,8 +95,9 @@ Details in section 8 of the architecture document.
 ## Known limitations at this stage
 
 - **Nothing is built.** Every figure is calculated or from a datasheet. None is measured.
-- **The power chain parts are roles, not part numbers.** The charger, the buck, the buck-boost
-  and the gauge each need an MPN and a datasheet before Gate 2 (Q-1).
+- **The power chain has first-choice parts but no datasheets yet.** Section 12 of the
+  architecture document names one for each role and why. C-03 blocks Gate 2 until each
+  datasheet is committed.
 - **Wake-up loses the first frame.** The transceiver's low-power receiver wakes the device on
   bus activity, but the frame that did the waking is not itself captured. The wake timestamp
   is recorded instead (Q-5).

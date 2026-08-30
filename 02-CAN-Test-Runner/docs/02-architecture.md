@@ -25,7 +25,7 @@ Neither starts until this is signed off.
 ```mermaid
 flowchart TB
     subgraph VEH["Vehicle"]
-        OBD["J1 OBD-II J1962<br/>pin 16 = +12 V<br/>CAN on pins 6/14"]
+        OBD["J1, J2 DB9 x2<br/>CiA 303-1<br/>pin 9 = V+, CAN on 2/7"]
     end
 
     subgraph PWR["Power chain"]
@@ -45,6 +45,7 @@ flowchart TB
         DISP["Display<br/>SPI"]
         RTC["RTC + backup cell"]
         BTN["Buttons"]
+        USBC["J4 USB-C<br/>mass storage + charge"]
     end
 
     subgraph BUS["CAN front end"]
@@ -69,6 +70,8 @@ flowchart TB
     MCU --> DISP
     MCU <--> RTC
     BTN --> MCU
+    USBC <--> MCU
+    USBC --> CHG
     GAUGE --> MCU
     T1 -->|"RXD wake"| MCU
 ```
@@ -94,14 +97,16 @@ the left is what makes the device outlive the ignition.
 | **U8** | Boost to 5 V, transceivers only | The MCP2562FD needs 4.5 to 5.5 V on VDD. Chosen with a low quiescent current mode, because in watch mode it feeds two transceivers drawing 5 uA each and its own quiescent current then dominates. | ER-06 |
 | **U9** | Fuel gauge | ER-13 wants remaining runtime predicted to 20 %. Cell voltage alone does not do that on LiFePO4, whose discharge curve is famously flat. A coulomb-counting gauge does. | FR-18, ER-13 |
 | **U10** | RTC with temperature-compensated oscillator, plus a backup cell | FR-11 wants absolute time across sessions, and the overnight quiet test compares timestamps against wall-clock hours. A TCXO-based RTC holds a few ppm where a bare 32.768 kHz crystal drifts 20 ppm or worse over a hot day. | FR-11, ER-08 |
-| **J1** | OBD-II J1962 male plug | The connector the whole product concept rests on. | FR-02 |
-| **J2** | microSD socket, push-push, card-detect | Card detect matters: SR-05 has to notice a card removed mid-session, and a switch is the only way to know. | FR-03, SR-05, MR-03 |
+| **J1, J2** | 2 x DB9 male, CiA 303-1 pinout | One per channel, with V+ on pin 9. The vehicle-specific wiring moves into a cable, so the device is not tied to one connector standard and works on a bench too. | FR-02 |
+| **J4** | USB-C receptacle, USB 2.0 full speed | Presents the SD card to a PC as a drive (FR-19) and charges the cell on a bench (FR-21). Full speed gives about 1 MB/s, which suits configuration and short sessions; bulk transfers still want the card reader. | FR-19, FR-21 |
+| **J3** | microSD socket, push-push, card-detect | Card detect matters: SR-05 has to notice a card removed mid-session, and a switch is the only way to know. | FR-03, SR-05, MR-03 |
 | **DS1** | Display, SPI | Trade-off open, see Q-3. | FR-07, FR-08, MR-02 |
 
 **Nothing enters the BOM without a datasheet (C-03).** Confirmed so far: the MCP2562FD, from
 the datasheet already committed in project 01, and the STM32H563 family specification. The
-power chain parts are named by function above, and each needs its exact MPN and datasheet
-before Gate 2. That is open question Q-1.
+power chain parts are named by function above. Section 12 gives a first choice for each with
+the property that decided it, and every one still needs its datasheet in `docs/datasheets/`
+before Gate 2.
 
 ### Why the H563 and not the cheaper H562
 
@@ -248,7 +253,7 @@ the requirement was too weak. **Raised to 20 000 and signed off at Gate 1**, see
 ## 6. Power budget (ER-12, FR-15)
 
 All figures are estimates at this stage, marked as such, and every one is replaced by a
-datasheet maximum before Gate 2. That is Q-1.
+datasheet maximum before Gate 2, using the parts named in section 12.
 
 ### Watch mode, car off, bus quiet
 
@@ -360,7 +365,7 @@ this design was checked against the alternate-function map of the **STM32H563VIT
 | Wake from both transceivers, card detect, buttons | any free GPIO with EXTI | the wake path of SR-09 |
 | Timestamp base | 32-bit free-running timer | 100 us resolution of SR-04 comes from here, disciplined by the RTC |
 | Cell temperature for logging | ADC | separate from the charger's own NTC |
-| USB FS | not used in rev A | pins reserved for a future config path |
+| USB FS | PA11, PA12 | mass storage and charging, FR-19 to FR-21 |
 
 ### Two collisions this check found
 
@@ -393,6 +398,10 @@ SPI1    transmit only master   2 pins
 I2C1                           2 pins
                               -------
                               14 pins used, 66 of 80 GPIO still free
+
+USB FS adds PA11 and PA12 on top of that, bringing it to 16 of 80. The .ioc committed here
+captures the 14-pin state, before USB became a requirement; re-open it and add USB before
+Gate 2 so the saved project matches the design.
 ```
 
 The project itself is committed at `MCU-CAN-Test-Runner/MCU-CAN-Test-Runner.ioc`, so the
@@ -410,9 +419,11 @@ choices, and which are wrong out of the box:**
   Channel 1 stays in Normal mode because it has to send the requests of FR-05.
 - **SPI1 is transmit-only.** A display never answers, so reserving a MISO pin wastes one.
 
-**PA11 and PA12 were deliberately vacated.** FDCAN1 defaults there, but those are the USB
-data pins, and REQ-002 reserves USB for a future configuration path. Moving FDCAN1 to
-PD0/PD1 costs nothing and keeps that door open.
+**PA11 and PA12 were deliberately vacated, and that decision paid off immediately.** FDCAN1
+defaults onto those two pins, but they are the USB data pins. At the time it was a
+precaution. USB mass storage then became a requirement (FR-19 to FR-21), so those pins are
+now in use and moving FDCAN1 to PD0/PD1 turned out to be the thing that made it possible
+without a redesign.
 
 **Remaining limit.** CubeMX confirms pins, clock tree and DMA channels. It does not confirm
 silicon errata. **Read the STM32H563 errata sheet before Gate 2 closes.**
@@ -468,9 +479,9 @@ Inside C-01 with room for a second board revision, which there will be.
 | SR-02 | 640 KB SRAM, section 5 | **Calculated, and the requirement was raised to 20 000 f/s (Q-2)** |
 | SR-03 | 256 KB buffer against a 250 ms stall | **Calculated, passes** |
 | SR-09 | 143 uA watch current, section 6 | **Calculated, passes** |
-| ER-01, ER-02 | protection then wide-input buck | Architected, parts open (Q-1) |
+| ER-01, ER-02 | protection then LM5164-Q1 wide-input buck, section 12 | Part chosen, datasheet outstanding |
 | ER-04 | ~250 mA from 12 V against a 500 mA limit | **Calculated, passes** |
-| ER-09, ER-10 | charger with hardware NTC inhibit | Architected, part open (Q-1) |
+| ER-09, ER-10 | LiFePO4 charger with hardware NTC inhibit, section 12 | Candidate chosen, datasheet outstanding |
 | ER-11 | protection IC independent of firmware | Architected |
 | ER-12 | 8.3 h logging, 12 h watch trivially | **Calculated, passes** |
 | ER-13 | coulomb counting, flat curve argument in section 4 | Architected |
@@ -479,15 +490,64 @@ Inside C-01 with room for a second board revision, which there will be.
 
 ---
 
+## 12. Power chain part selection (closes Q-1)
+
+Each part below is a first choice with the one property that decided it. **None of them may
+enter the BOM until its datasheet sits in `docs/datasheets/` (C-03)**, and availability and
+price still have to be checked per MFR-04. Where a part is unconfirmed, it says so.
+
+| Role | First choice | The property that decided it | State |
+|---|---|---|---|
+| Wide-input buck, vehicle rail to 5 V | TI **LM5164-Q1** | 6 to 100 V input covers ER-01 with room to spare, 1 A output, and **10 uA standby quiescent current**, which is what makes ER-03's "under 1 mA from the vehicle" reachable at all. AEC-Q100 qualified. | Confirmed by product page, datasheet to download |
+| LiFePO4 charger with power path | ADI **LTC4098-3.6** | Float voltage preset to **3.6 V** for LiFePO4, and a thermistor input that qualifies charging over 0 to 60 C **in hardware**. That is C-06 satisfied without firmware. PowerPath runs the system while the cell charges, which is FR-16. | Candidate, needs datasheet and a stock check |
+| Alternative charger | ADI **LTC4156**, TI **bq25070** | LTC4156 has selectable LiFePO4 float voltages including 3.6 V, an NTC input and PowerPath, but it is I2C-configured, so the hardware-only guarantee of C-06 must be re-checked. bq25070 implements a LiFePO4-specific charge algorithm and is cheaper. | Fallbacks |
+| Cell protection | LiFePO4-threshold protector plus dual FET | See the warning below. | Part not yet chosen |
+| Fuel gauge | ADI **LTC2942** | A pure coulomb counter. See the reasoning below. | Candidate, needs datasheet |
+| Buck-boost to 3.3 V | TI **TPS63802** class | Must start at 3.65 V and hold 3.3 V down to 2.5 V, and must have a low-Iq mode for the watch state. | Unconfirmed, needs datasheet |
+| Boost to 5 V, transceivers only | Low-Iq boost | In watch mode it feeds two transceivers drawing 5 uA each, so **its own quiescent current is the whole budget**. Pick on Iq, not on efficiency at full load. | Unconfirmed, needs datasheet |
+| RTC | Low-power TCXO RTC | ER-08 wants a few ppm across a hot car, and FR-11 wants it running on a backup cell for months. | Unconfirmed, needs datasheet |
+| ESD protection | TVS arrays on both CAN pairs, USB and supply | ER-14. | Unconfirmed |
+
+### Two findings that changed the design
+
+**1. A normal fuel gauge does not work with LiFePO4.** Gauges of the MAX17048 class model a
+Li-ion cell, which sits at 3.7 V nominal and 4.2 V full. A LiFePO4 cell is 3.2 V nominal and
+3.6 V full, so the model is simply wrong and the state of charge it reports is meaningless.
+Impedance-tracking gauges do better but still struggle, because the LiFePO4 discharge curve
+is famously flat and carries hysteresis, so voltage says very little about how much is left.
+
+**The answer here is not a cleverer gauge, it is the use case.** This device is plugged into a
+vehicle and charged to full before nearly every session, so it almost always starts from a
+known 100 %. That turns the hard problem, "estimate the state of an unknown cell", into the
+easy one, "count what has left a full cell". A **pure coulomb counter** such as the LTC2942
+does exactly that and does not care about chemistry at all, because it counts charge rather
+than modelling voltage. ER-13's 20 % accuracy is comfortably reachable that way.
+
+**2. A Li-ion protection IC would never protect this cell.** Single-cell protectors are sold
+by threshold, and the common ones are built for Li-ion: over-voltage around 4.3 V,
+under-voltage around 2.4 V. On a LiFePO4 cell that never exceeds 3.65 V, **the over-voltage
+trip can never fire**, so the part sits there doing nothing while a fault charges the cell
+past its limit. The protector must be an LiFePO4-threshold device, roughly 3.9 V
+over-voltage and 2.0 to 2.5 V under-voltage. This is an easy and dangerous substitution to
+get wrong, so it is written down here rather than left to BOM time.
+
+### What is still open
+
+- Every "unconfirmed" row above needs a datasheet in `docs/datasheets/` before Gate 2.
+- MFR-04 wants supplier, supplier part number, price and a stock figure recorded, and Gate 3
+  is where that snapshot gets taken.
+- The charger choice should be re-checked once the cell is picked, because charge current and
+  the thermistor curve both depend on the actual cell.
+
+---
+
 ## 11. Open questions, and the decision taken on each
 
-**Q-1. The power chain parts are named by function, not by part number.** Everything in
-sections 2 and 3 that is not the microcontroller or the transceiver is currently a role
-rather than an MPN, and C-03 forbids that entering a BOM. **Decision: the power chain gets
-its own selection pass before Gate 2**, choosing and citing a datasheet for the wide-input
-buck, the charger, the protection IC, the buck-boost, the 5 V boost and the gauge. The
-architecture does not change with those choices, so Gate 1 is not blocked by it, but Gate 2
-is.
+**Q-1. The power chain parts were named by function, not by part number.** **Closed by
+section 12**, which names a first choice for each with the property that decided it. Two of
+those choices changed the design rather than merely filling a slot, and both are written up
+there: the fuel gauge, and the cell protection thresholds. Datasheets still have to be
+downloaded into `docs/datasheets/` before Gate 2 opens, per C-03.
 
 **Q-2. SR-02 was too weak and has been raised.** Section 5 calculates a worst case of about
 20 000 frames per second across both channels, while SR-02 only demanded 10 000. **Signed off
@@ -503,10 +563,22 @@ mostly a mechanical and enclosure question, and Gate 1.5 exists precisely to ans
 class of question. Either choice fits the budget of section 9.
 
 **Q-4. Where do the two CAN channels come from on one OBD-II connector?** J1962 exposes one
-CAN pair on pins 6 and 14. A second channel needs either a vehicle that exposes another bus
-on the optional pins, or a breakout cable. **Decision: bring both channels out to the plug
-where the pins allow, and provide a short adapter for the second channel.** Worth confirming
-against the ID.Buzz pinout before Gate 1.5 fixes the connector.
+CAN pair on pins 6 and 14. A second channel would have to use manufacturer-discretionary
+pins, which differ per maker, so a fixed OBD-II plug cannot carry both channels reliably.
+
+**Decision: two DB9 connectors on the device, CiA 303-1 pinout, one per channel, and the
+vehicle-specific work moves into a cable.** Power arrives on DB9 pin 9, which CiA 303-1
+defines as V+. REQ-002 FR-02 was rewritten accordingly.
+
+This is what the professional tools already do, the CANedge included, and off-the-shelf
+OBD2-to-DB9/DB9 splitter cables exist for it. Three things follow:
+
+- Both channels are reachable without guessing a manufacturer's pin assignment.
+- The device works on a bench, on any bus with a DB9, not only on what a car exposes.
+- Existing cables work, because CiA 303-1 is the same standard the CANedge uses.
+
+The cost is mechanical. A DB9 is about 31 mm wide, so two of them nearly fill a 70 mm face.
+That is a Gate 1.5 problem and it is why MR-01 already allows 110 x 70 x 30 mm.
 
 **Q-5. Wake latency versus the first frame.** The transceiver's low-power receiver uses a
 wake-up filter, so the very first bus activity wakes the device but may not itself be

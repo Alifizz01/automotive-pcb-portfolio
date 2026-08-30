@@ -16,9 +16,9 @@
 
 ## 1. Purpose and scope
 
-Design a handheld device that plugs into a vehicle's OBD-II port, runs a **test defined
-by the user** for the length of a drive or a bench session, and ends with a verdict:
-**PASSED**, **FAILED**, or **INCOMPLETE**.
+Design a handheld device that connects to a vehicle's OBD-II port through an adapter
+cable, runs a **test defined by the user** for the length of a drive or a bench session,
+and ends with a verdict: **PASSED**, **FAILED**, or **INCOMPLETE**.
 
 Existing loggers record and hope. This one is given a question before the session starts,
 checks it continuously while recording, and answers it. The problem it solves is finding
@@ -62,7 +62,7 @@ grades the session against those rules.
 | ID | Requirement | Verification |
 |---|---|---|
 | **FR-01** | The device shall provide **two independent CAN-FD channels**, ISO 11898-1, arbitration to 1 Mbit/s and data to 5 Mbit/s. | Schematic review, bench test |
-| **FR-02** | The device shall connect to the vehicle through a **J1962 (OBD-II) plug** and take its power from pin 16. | Layout review, vehicle test |
+| **FR-02** | The device shall present each CAN channel on its own **DB9 connector with the CiA 303-1 pinout**, and shall take its power from **DB9 pin 9**. Connection to a vehicle OBD-II port shall be by adapter cable, not by a plug fixed to the device. | Layout review, vehicle test |
 | **FR-03** | The device shall log every received frame to a removable SD card, with a timestamp, on both channels. | Bench test against injected traffic |
 | **FR-04** | The device shall read a **test definition file** from the SD card at power-on, with no PC attached. | Bench test |
 | **FR-05** | The device shall transmit the requests the test defines, at the cadence the test defines, including UDS requests on ISO 15765-2. | Bench test with a responding node |
@@ -79,6 +79,9 @@ grades the session against those rules.
 | **FR-16** | The device shall charge its internal battery from the vehicle while plugged in, and shall run from vehicle power while charging. | Bench test |
 | **FR-17** | While on battery the device shall detect and log **bus wake-up events**: what woke the bus, when, and how long it stayed awake. | Bench test with a scheduled wake node |
 | **FR-18** | The display shall show battery state and estimated remaining runtime, and the device shall end the session cleanly before the battery is exhausted. | Runtime test to depletion |
+| **FR-19** | The device shall present the SD card to a host computer as a **USB mass storage device**, so logs and reports can be read and test files written without removing the card. | Plug into a PC, read and write files |
+| **FR-20** | A session shall not run while the card is mounted over USB. Connecting USB shall **end the session cleanly** and write the verdict first. | Connect USB mid-session, inspect the log and report |
+| **FR-21** | The device shall charge its cell from USB as well as from the vehicle, so it is usable on a bench with no vehicle attached. | Bench test |
 
 ## 3. Firmware requirements
 
@@ -105,7 +108,8 @@ that decide whether the device is trustworthy.
 | **ER-01** | The device shall operate from a nominal 12 V vehicle supply over the range **6 V to 32 V**, covering a cranking dip and a 24 V vehicle. | Bench supply sweep |
 | **ER-02** | The input shall survive **reverse polarity** and shall clamp the ISO 7637-2 transients present on a vehicle rail. Certification is not claimed. | Schematic review, datasheet check |
 | **ER-03** | With no session running and the internal battery full, current drawn from the vehicle shall be **under 1 mA**. The OBD-II port stays live on most vehicles, and the device must never flatten the car if it is left plugged in. | Measurement |
-| **ER-04** | Current drawn from OBD-II pin 16 shall not exceed **500 mA** in any state, charging included. | Calculation, then measurement |
+| **ER-14** | Every externally exposed line, both CAN pairs, the USB data pair and the supply, shall carry **ESD protection**. These connectors get handled in a workshop. | Schematic review, datasheet check |
+| **ER-04** | Current drawn from the vehicle supply on DB9 pin 9 shall not exceed **500 mA** in any state, charging included. | Calculation, then measurement |
 | **ER-05** | The device shall detect low battery and shut down cleanly with at least **60 seconds** of energy still in reserve, and shall hold up for **100 ms** if the cell is physically disconnected, so that a write in progress can always be closed. | Calculation, then measurement |
 | **ER-06** | All logic shall be 3.3 V. Every IC shall have a decoupling capacitor of at least 100 nF within 5 mm of its supply pin. | Schematic and layout review |
 | **ER-07** | Each CAN transceiver shall withstand a bus short to 12 V without damage. | Datasheet check |
@@ -128,9 +132,10 @@ that is a rev B question, not a rev A one.
 | ID | Requirement | Verification |
 |---|---|---|
 | **MR-01** | The board and cell together shall fit a handheld enclosure no larger than **110 x 70 x 30 mm**. Grown from the original 90 x 60 x 25 mm to take the cell. | Measured in PCB, 3D view |
-| **MR-02** | The display shall be readable while the device is plugged into a car's OBD-II port, or on the end of a short cable. | 3D view, vehicle fit check |
+| **MR-02** | The display shall be readable with the device sitting on a seat or a bench at the end of its cable, not only when held up to the eye. | 3D view, vehicle fit check |
 | **MR-03** | The SD card shall be removable without opening the enclosure or unplugging the device. | 3D view |
 | **MR-04** | At least one user button shall be reachable with the device in place. | 3D view |
+| **MR-08** | Both DB9 connectors and the USB connector shall be reachable without dismantling anything, and shall be labelled CH1 and CH2 on the enclosure. | 3D view |
 | **MR-05** | Mounting holes shall suit an off-the-shelf enclosure chosen before layout starts. | Layout review against the chosen enclosure drawing |
 | **MR-06** | The cell shall be retained mechanically, not held by its solder tabs, and shall be replaceable without cutting anything. | 3D view, physical check |
 | **MR-07** | The cell shall sit away from the hottest parts on the board, and the temperature sensor of ER-10 shall measure the **cell**, not the board. | Layout review, thermal measurement |
