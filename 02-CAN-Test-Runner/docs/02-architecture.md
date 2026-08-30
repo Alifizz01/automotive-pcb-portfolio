@@ -395,6 +395,9 @@ I2C1                           2 pins
                               14 pins used, 66 of 80 GPIO still free
 ```
 
+The project itself is committed at `MCU-CAN-Test-Runner/MCU-CAN-Test-Runner.ioc`, so the
+check can be reopened and re-run rather than taken on trust.
+
 **Three settings this exercise pinned down, which are firmware defaults rather than pin
 choices, and which are wrong out of the box:**
 

@@ -17,3 +17,9 @@ __pycache__/
 # OS
 Thumbs.db
 desktop.ini
+
+# STM32CubeMX generated output, the .ioc is the source
+Core/
+Drivers/
+Middlewares/
+.mxproject
