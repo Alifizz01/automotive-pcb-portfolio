@@ -541,6 +541,72 @@ get wrong, so it is written down here rather than left to BOM time.
 
 ---
 
+## 13. Clock plan
+
+Every digital chip runs on a heartbeat, and everything it does is counted in beats. The
+choice of where that beat comes from is not free here, because three separate requirements
+depend on its accuracy.
+
+| Requirement | What it needs from the clock |
+|---|---|
+| **ER-08**, timestamps accurate to 30 ppm | a stable reference that does not drift with temperature |
+| **FR-19**, USB Full Speed | exactly 48 MHz, held to roughly 0.25 % |
+| **FR-01/FR-02**, CAN-FD at 5 Mbit/s | a kernel clock that divides cleanly into the bit timing |
+
+### Why an external crystal is not optional
+
+The microcontroller contains its own oscillator, which costs nothing and needs no parts. It
+also drifts with temperature, typically by about 1 %, which is **10 000 ppm**. ER-08 asks for
+30 ppm. That is a factor of 300, so the internal oscillator is not close and no amount of
+configuration fixes it.
+
+An external **quartz crystal (HSE)** holds tens of ppm across temperature. So the board gets
+a crystal, and that decision is made by the timestamp requirement alone.
+
+It is worth naming the alternative that this rules out. The STM32H5 can run USB with no
+crystal at all, using its internal 48 MHz oscillator trimmed against the host's own USB
+traffic by the clock recovery system. On a board where USB were the only fussy consumer, that
+would be the elegant answer and would save a part. Here it is a dead end, because ER-08 has
+already put a crystal on the board.
+
+### The plan
+
+```
+24 MHz crystal (HSE)
+        |
+        +-- PLL1 --> system clock, up to 250 MHz      CPU, buffers, rule engine
+        |
+        +-- PLL  --> exactly 48 MHz                   USB Full Speed, SD card
+        |
+        +-- PLL  --> defined FDCAN kernel clock       bit timing for both channels
+        |
+        +-- RTC  --> separate 32.768 kHz crystal      wall-clock time across power cycles
+```
+
+A **PLL** multiplies and divides one incoming frequency into the several the chip needs, the
+way one pedalling speed drives different wheel speeds through different gears. One crystal
+therefore feeds everything.
+
+24 MHz is chosen because it divides cleanly to 48 MHz and reaches 250 MHz through the PLL
+without awkward ratios. The value is confirmed in CubeMX's Clock Configuration tab, which
+turns a field red when a peripheral cannot be given a legal frequency.
+
+### Two separate crystals, deliberately
+
+The 32.768 kHz crystal for the real-time clock is **not** the same part and not the same job.
+The HSE crystal runs the chip and stops when the chip sleeps. The 32.768 kHz crystal keeps
+wall-clock time running on the backup cell while everything else is off, which is FR-11. A
+device that watches a bus overnight and reports "the bus woke at 03:14" needs to know what
+03:14 means.
+
+### What is not decided yet
+
+The crystal's exact part number, load capacitance and tolerance. ER-08 sets the ceiling at
+30 ppm; the load capacitors follow from whichever crystal is ordered, as in project 01. This
+goes into the BOM work before Gate 2.
+
+---
+
 ## 11. Open questions, and the decision taken on each
 
 **Q-1. The power chain parts were named by function, not by part number.** **Closed by
