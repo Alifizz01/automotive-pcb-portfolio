@@ -1,9 +1,12 @@
 Protel Design System Design Rule Check
 PCB File : C:\Users\Nitrox\OneDrive\Desktop\Altium_learn\CAN-Sniffer-HAT\PCB_Project\CAN_Sniffer_HAT.PcbDoc
-Date     : 29/08/2026
-Time     : 17:19:31
+Date     : 29/09/2026
+Time     : 21:07:08
 
-Processing Rule : Clearance Constraint (Gap=0.1mm) (All),(All)
+Processing Rule : Clearance Constraint (Gap=0.152mm) (All),(All)
+Rule Violations :0
+
+Processing Rule : Clearance Constraint (Gap=0.3mm) (InPolygon),(All)
 Rule Violations :0
 
 Processing Rule : Short-Circuit Constraint (Allowed=No) (All),(All)
@@ -15,7 +18,13 @@ Rule Violations :0
 Processing Rule : Modified Polygon (Allow modified: No), (Allow shelved: No)
 Rule Violations :0
 
-Processing Rule : Width Constraint (Min=0.152mm) (Max=1.524mm) (Preferred=0.254mm) (All)
+Processing Rule : Width Constraint (Min=0.2mm) (Max=0.5mm) (Preferred=0.3mm) (InNet('CANH') or InNet('CANL'))
+Rule Violations :0
+
+Processing Rule : Width Constraint (Min=0.152mm) (Max=1.524mm) (Preferred=0.254mm) (not (InNet('+3V3') or InNet('+5V') or InNet('GND') or InNet('CANH') or InNet('CANL')))
+Rule Violations :0
+
+Processing Rule : Width Constraint (Min=0.3mm) (Max=1mm) (Preferred=0.5mm) (InNet('+3V3') or InNet('+5V') or InNet('GND'))
 Rule Violations :0
 
 Processing Rule : Routing Topology Rule(Topology=Shortest) (All)
@@ -51,4 +60,4 @@ Rule Violations :0
 
 Violations Detected : 0
 Waived Violations : 0
-Time Elapsed        : 00:00:01
+Time Elapsed        : 00:00:00

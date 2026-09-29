@@ -11,6 +11,18 @@ that follow from that are spelled out under [known limitations](#known-limitatio
 **Status:** schematic and layout complete, DRC clean with zero violations. The board has
 not been fabricated yet, so nothing here has been proven against real copper.
 
+![3D view of the routed board](images/board-3d.png)
+
+*Top side in Altium's 3D view. The 40-pin socket (J1) is mounted on the underside, which is
+where a HAT's socket goes; only its solder tails show through here. The bottom layer is a
+near-solid GND plane, and the pours stop short of the 6.2 mm bare land round each mounting
+hole, as the HAT mechanical spec asks.*
+
+![Schematic](images/schematic.png)
+
+*The single schematic sheet: Pi header, CAN controller and clock, transceiver and bus, HAT
+ID EEPROM, status LEDs.*
+
 ---
 
 ## Signal chain
@@ -72,6 +84,11 @@ pin, so it flickers on real bus traffic with no firmware involved. The RXD pin i
 specified for 4 mA at VOL, and the LED draws about 1.4 mA, so it is well inside what the
 pin can sink.
 
+**J1 on the underside.** The first layout had the header footprint mirrored: pin 1 sat at
+the far end of the row, which would have put the Pi's 3V3 (pin 1) on this board's GND
+(pin 39). Moving J1 to the bottom side fixes it, and is also where a HAT's female socket
+physically belongs. Checked pad by pad against the Pi Zero 2 W mechanical drawing.
+
 **Mounting holes locked before routing.** An unnetted through-hole pad looks like a free
 via to an autorouter. On the first routing pass the router used mounting hole MH2 to
 change layers, which on an assembled HAT shorts that net to an M2.5 screw and the Pi's
@@ -113,13 +130,14 @@ recessive, the 5 V rail sees about 10 mA and the whole board idles under 30 mA.
 
 | Item | State |
 |---|---|
-| Schematic | 26 components, 42 nets, 138 pins, all connected or explicitly marked No-ERC |
+| Schematic | 24 components, every pin connected or explicitly marked No-ERC |
 | Symbol library | 12 symbols, all drawn for this project |
 | Footprint library | 10 footprints, all drawn for this project |
-| Layout | 2 layers, 65.0 x 30.0 mm, fully routed |
-| Design rules | Clearance 6 mil, width 6 mil min, drill 0.3 to 3.0 mm, annular ring 0.15 mm |
+| Layout | 2 layers, 65.0 x 30.0 mm, fully routed (rev 2, placed along the signal flow) |
+| Design rules | Clearance 6 mil (0.3 mm for pours), width 6 mil min with 0.5 mm power and 0.3 mm CAN classes, via 0.3/0.6 mm, drill 0.3 to 3.0 mm, annular ring 0.15 mm |
 | DRC | **0 violations, 0 waivers**, report in `hardware/Project Outputs for CAN_Sniffer_HAT/` |
-| Gerbers, BOM, assembly drawing, 3D render | not generated yet |
+| 3D | STEP model on every part |
+| Gerbers, BOM, assembly drawing | not generated yet |
 | Fabricated and tested | no |
 
 ## Requirement traceability
@@ -132,11 +150,11 @@ it is tracked here.
 | FR-01 | One CAN-FD channel over SPI | Pass | U1 on SPI0 CE0 |
 | FR-02 | CAN-FD, 1 Mbit/s arbitration, 5 Mbit/s data | Pass | MCP2518FD to 8 Mbit/s, MCP2562FD rated 2/5/8 Mbit/s, 40 MHz clock |
 | FR-03 | CAN_H, CAN_L, GND on a removable terminal, 3.5 mm | Pass | J2, pluggable, 3.5 mm pitch |
-| FR-04 | 120 R termination, selectable without soldering | Pass | R7 in series with JP1 shunt |
+| FR-04 | 120 R termination, selectable without soldering | Pass | R7 in series with the P1 shunt to CANL. P1 pin 1 was unconnected until layout rev 2, so the jumper did nothing; see [the layout document](docs/04-layout.md#9-rev-2-of-the-layout) |
 | FR-05 | Two status LEDs | Pass | D1 power, D2 on transceiver RXD |
 | FR-06 | HAT ID EEPROM at 0x50 on ID_SD/ID_SC | Pass | U3, A0 to A2 grounded, 3k9 pull-ups, WP test point |
 | FR-07 | Interrupt to an edge-capable GPIO | Pass | U1 INT to GPIO25 |
-| FR-08 | Unused GPIO on a breakout header | Pass | J3, 2x12, all 21 unused GPIO |
+| FR-08 | Unused GPIO on a breakout header | Open | J3 (2x12) is in the Gate 2 netlist but is no longer on the schematic or the board |
 | ER-01 | Powered only from the Pi header | Pass | No other connector carries power |
 | ER-02 | Under 150 mA from the 5 V rail | Pass | 70 mA worst case, calculated above |
 | ER-03 | 3.3 V logic only, no 5 V at any GPIO | Pass | U2 VIO on 3V3, U1 native 3.3 V, no 5 V net touches a GPIO net |
@@ -145,8 +163,8 @@ it is tracked here.
 | ER-06 | Oscillator inside the controller's tolerance | Pass | 40 MHz +/-30 ppm against a +/-0.5 % requirement |
 | MR-01 | 65.0 x 30.0 mm outline | Pass | Vertices read back from the saved `.PcbDoc` |
 | MR-02 | Four M2.5 holes per the Raspberry Pi drawing | Pass | 58 x 23 mm pitch, 2.75 mm drill, unplated, no land |
-| MR-03 | Header seats on a Zero 2 W without interference | By construction | Full 2x20 at the HAT-spec position; not yet checked in 3D |
-| MR-04 | Terminal reachable with the board mounted | By construction | J2 on the outer long edge; not yet checked in 3D |
+| MR-03 | Header seats on a Zero 2 W without interference | Pass | Socket on the underside, pin 1 at (8.37, 25.23) mm over the Pi's pin 1 per the Zero 2 W drawing; checked in 3D |
+| MR-04 | Terminal reachable with the board mounted | Pass | J2 on the board edge, wire entry facing out; checked in 3D |
 | MR-05 | Nothing taller than an 11 mm spacer, except header and terminal | Pass | Everything else is SOIC or 0805, under 2 mm |
 | MFR-01 | 2 layers, 1.6 mm FR-4, 1 oz copper | Open | Layer stack not yet set |
 | MFR-02 | 6 mil track and clearance, enforced by rules | Pass | Rules configured, DRC clean |
@@ -166,9 +184,9 @@ it is tracked here.
   out.
 - **Termination is a plain 120 R**, not split termination with a capacitor to the SPLIT
   pin. Split termination behaves better for EMC and is the obvious change for a rev B.
-- **The CAN pair runs about 32 mm** from the transceiver to the terminal, across half the
-  board. Fine at these data rates for a bench tool, but it is longer than it should be,
-  and moving U2 would roughly halve it.
+- **The CAN pair needs one crossing.** J2's pin order (CAN_H below CAN_L) is the reverse
+  of the transceiver's, so the pair cannot be routed flat on one layer. It is under 10 mm
+  long, so this is cosmetic at these data rates.
 - **No EMC work, no enclosure, no firmware.** All three are outside the scope of this
   project.
 
@@ -192,7 +210,9 @@ The symbol library, the footprint library and the schematic sheet are generated 
 sources rather than drawn by hand, which keeps the netlist reviewable as a diff and lets a
 script check it. `tools/gen_wire.py` asserts that all 138 pins belong to exactly one net
 and that no net has fewer than two pins, so a broken netlist fails before Altium is
-opened. The layout was placed and routed in Altium in the normal way.
+opened. The rev 2 placement is a table in `tools/router/place.py`, which checks pad
+clearances before anything moves, and the tracks come from `tools/router/route.py`, an
+octilinear maze router written for this board in place of the Altium autorouter.
 
 [`tools/README.md`](tools/README.md) documents the scripts and the Altium behaviour worth
 knowing before doing this to yourself.
@@ -204,7 +224,7 @@ knowing before doing this to yourself.
 | [Requirements](docs/01-requirements.md) | What the board has to do, and how each requirement gets verified |
 | [Architecture](docs/02-architecture.md) | Part selection with reasons, block diagram, power budget, pin allocation, cost |
 | [Schematic](docs/03-schematic.md) | Full netlist, symbol library, the checks that were run against the saved file |
-| [Layout](docs/04-layout.md) | Placement distances, routing, design rules, DRC, and the two defects that were found and fixed |
+| [Layout](docs/04-layout.md) | Placement, routing, design rules, DRC, and every defect that was found and fixed |
 
 ---
 
