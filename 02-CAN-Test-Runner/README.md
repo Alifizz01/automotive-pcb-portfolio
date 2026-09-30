@@ -10,7 +10,8 @@ key-off, and a USB port so the logs come off without touching the card.
 > itself or taken from a cited datasheet, and the design decisions are mine.
 
 **Status:** schematic captured and board laid out: four layers, 100 x 66 mm, routed, **DRC
-clean with 0 violations**. Fabrication package and firmware not started.
+clean with 0 violations**, Gerbers, drill, BOM and pick-and-place generated. A portfolio design:
+it will not be ordered. Firmware not started.
 
 ![3D view of the routed board](images/board-3d-top.png)
 
@@ -84,7 +85,7 @@ Details in section 8 of the architecture document.
 | 1. Architecture | parts, block diagram, power budget, cell chemistry, pin check | **complete** |
 | 1.5. Mechanical integration | enclosure, 3D models, board outline and keep-outs | outline and 3D models done, enclosure open |
 | 2. Schematic | full schematic, ERC clean, traceability | **captured**, ERC report to commit |
-| 3. Layout and release | DRC, manufacturing package | **layout done, DRC clean**; fab package outstanding |
+| 3. Layout and release | DRC, manufacturing package | **complete**: DRC clean, Gerbers, drill, BOM, pick-and-place |
 | 4. Firmware and proof | firmware, and one PASSED, one FAILED, one INCOMPLETE session | not started |
 
 ## Documents
@@ -96,7 +97,12 @@ Details in section 8 of the architecture document.
 | [Schematic](docs/03-schematic.md) | Part changes against the architecture, design values from each datasheet, pin allocation, traceability |
 | [Layout](docs/04-layout.md) | Stack-up, design rules with reasons, placement, routing, DRC report, 3D models, open items |
 
-![Schematic](images/schematic.png)
+The full schematic is a vector PDF in `hardware/Project Outputs for CAN_Test_Runner/`, and each
+block is shown at readable size in [the schematic document](docs/03-schematic.md). Two of them:
+
+![CAN channels](images/sch-can.png)
+
+![Microcontroller](images/sch-mcu.png)
 
 ## Known limitations at this stage
 

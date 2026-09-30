@@ -1,0 +1,70 @@
+Name,Description,Designator,Footprint,LibRef,Quantity,MPN
+LiFePO4 18650,18650 cell holder,BT1,BATT_KEYSTONE_1042_18650,BATT_18650,1,Keystone 1042
+CR1220,Coin cell retainer,BT2,BATT_KEYSTONE_3000_12MM,BATT_COIN,1,Keystone 3000
+2.2uF 100V,"Capacitor, non-polarised","C1, C2",C1210,CAP,2,generic 1210 X7R/C0G
+2.2nF 50V,"Capacitor, non-polarised",C3,C0603,CAP,1,generic 0603 X7R/C0G
+3.3nF,"Capacitor, non-polarised",C4,C0603,CAP,1,generic 0603 X7R/C0G
+180pF C0G,"Capacitor, non-polarised",C5,C0603,CAP,1,generic 0603 X7R/C0G
+22uF 25V,"Capacitor, non-polarised",C6,C1210,CAP,1,generic 1210 X7R/C0G
+100nF,"Capacitor, non-polarised","C7, C11, C12, C15, C21, C22, C23, C24, C25, C27, C29, C33, C34, C35, C36, C37, C39, C40, C41, C42, C43",C0603,CAP,21,generic 0603 X7R/C0G
+10uF,"Capacitor, non-polarised","C8, C13, C16, C17, C18, C32",C0805,CAP,6,generic 0805 X7R/C0G
+4.7uF,"Capacitor, non-polarised","C9, C26",C0805,CAP,2,generic 0805 X7R/C0G
+22uF,"Capacitor, non-polarised",C10,C1210,CAP,1,generic 1210 X7R/C0G
+22uF,"Capacitor, non-polarised",C14,C0805,CAP,1,generic 0805 X7R/C0G
+2.2uF,"Capacitor, non-polarised","C19, C20",C0603,CAP,2,generic 0603 X7R/C0G
+1uF,"Capacitor, non-polarised","C28, C38",C0603,CAP,2,generic 0603 X7R/C0G
+27pF C0G,"Capacitor, non-polarised","C30, C31",C0603,CAP,2,generic 0603 X7R/C0G
+PMEG10030ELP,Schottky diode (pad 1 = cathode),"D1, D2",SOD128,DIODE_SCHOTTKY,2,Nexperia PMEG10030ELPX
+SMBJ36A,Unidirectional TVS (pad 1 = cathode),D3,SMB,TVS_UNI,1,Bourns SMBJ36A
+PMEG4030ER,Schottky diode (pad 1 = cathode),"D4, D5, D6",SOD123W,DIODE_SCHOTTKY,3,Nexperia PMEG4030ERX
+Green,LED,D7,LED0603,LED,1,generic 0603 green LED
+CH1 DB9,"DB9 male, CiA 303-1: 2 CAN_L, 3 CAN_GND, 5 SHLD, 6 GND, 7 CAN_H, 9 V+",J1,DSUB-9_M_WR-DSUB_618009231221,DB9_M,1,Wurth 618009231221
+CH2 DB9,"DB9 male, CiA 303-1: 2 CAN_L, 3 CAN_GND, 5 SHLD, 6 GND, 7 CAN_H, 9 V+",J2,DSUB-9_M_WR-DSUB_618009231221,DB9_M,1,Wurth 618009231221
+USB-C,USB-C 2.0 receptacle,J3,USB-C_GCT_USB4105,USB_C,1,GCT USB4105-GF-A
+microSD,microSD push-push with card-detect switch (9/10),J4,MICROSD_HIROSE_DM3AT,MICROSD,1,Hirose DM3AT-SF-PEJM5
+LS027B7DH01A,"10-pin 0.5 mm FPC, Sharp LS027B7DH01A pin order",J5,FPC_10P_0.5_WR-FPC_687110149022,FPC10_LCD,1,Wurth 687110149022
+Cell NTC x2,3-pin connector,J6,JST_PH_S3B-PH-SM4-TB,CONN3,1,JST S3B-PH-SM4-TB
+SWD,"Tag-Connect TC2050, Cortex 10-pin SWD",J7,TAG-CONNECT_TC2050-IDC-NL,SWD_TC2050,1,Tag-Connect TC2050-IDC-NL (footprint only)
+33uH,Inductor,L1,L_WE-LQS-6045,IND,1,Wurth 74404064330
+0.47uH,Inductor,L2,L_WE-MAPI-2016,IND,1,Wurth 744383430047
+2.2uH,Inductor,L3,L_WE-LQS-2520,IND,1,Wurth 74404024022
+PMV48XP,"P-channel MOSFET, SOT-23","Q1, Q5",SOT-23-3,PMOS,2,Nexperia PMV48XP
+PMV16XN,"N-channel MOSFET, SOT-23","Q2, Q3, Q4",SOT-23-3,NMOS,3,Nexperia PMV16XN
+232k,Resistor,R1,R0603,RES,1,generic 0603 1%
+100k,Resistor,"R2, R7, R14, R30, R37, R40, R41",R0603,RES,7,generic 0603 1%
+31.6k,Resistor,R3,R0603,RES,1,generic 0603 1%
+158k,Resistor,R4,R0603,RES,1,generic 0603 1%
+49.9k,Resistor,R5,R0603,RES,1,generic 0603 1%
+75k,Resistor,R6,R0603,RES,1,generic 0603 1%
+200k,Resistor,R8,R0603,RES,1,generic 0603 1%
+20k,Resistor,R9,R0603,RES,1,generic 0603 1%
+1k,Resistor,"R10, R47",R0603,RES,2,generic 0603 1%
+82k,Resistor,R11,R0603,RES,1,generic 0603 1%
+10k,Resistor,"R12, R13, R20, R21, R22, R25, R38, R39, R42, R45, R46, R48",R0603,RES,12,generic 0603 1%
+47k,Resistor,"R15, R31, R32, R33, R34, R35",R0603,RES,6,generic 0603 1%
+0.1R,Resistor,R16,R0805,RES,1,generic 0805 1%
+330,Resistor,R17,R0603,RES,1,generic 0603 1%
+2.2k,Resistor,R18,R0603,RES,1,generic 0603 1%
+0,Resistor,R19,R0603,RES,1,generic 0603 1%
+383k,Resistor,R23,R0603,RES,1,generic 0603 1%
+68.1k,Resistor,R24,R0603,RES,1,generic 0603 1%
+5.1k,Resistor,"R26, R27",R0603,RES,2,generic 0603 1%
+22k,Resistor,R28,R0603,RES,1,generic 0603 1%
+33k,Resistor,R29,R0603,RES,1,generic 0603 1%
+22,Resistor,R36,R0603,RES,1,generic 0603 1%
+4.7k,Resistor,"R43, R44",R0603,RES,2,generic 0603 1%
+START/STOP,"Tactile switch, pads 1/3 and 2/4 common",SW1,SW_WS-TASV_6x6,SW_4P,1,Wurth 430182050816
+MODE,"Tactile switch, pads 1/3 and 2/4 common",SW2,SW_WS-TASV_6x6,SW_4P,1,Wurth 430182050816
+STM32H563VIT6,"STM32H563VIT6 Cortex-M33 250 MHz, 2 MB flash, 640 KB SRAM, LQFP-100",U1,LQFP-100_14x14,STM32H563VIT6,1,ST STM32H563VIT6
+MCP2562FD CH1,"CAN FD transceiver with VIO, SOIC-8",U2,SOIC-8_150MIL,MCP2562FD,1,Microchip MCP2562FD-E/SN
+MCP2562FD CH2,"CAN FD transceiver with VIO, SOIC-8",U3,SOIC-8_150MIL,MCP2562FD,1,Microchip MCP2562FD-E/SN
+LM5164-Q1,"LM5164-Q1 100 V 1 A synchronous buck, DDA PowerPAD",U4,SOIC-8_DDA_PowerPAD,LM5164,1,TI LM5164QDDARQ1
+BQ25170,"BQ25170 800 mA linear charger, Li-ion / LiFePO4, WSON-8",U5,WSON-8_DSG,BQ25170,1,TI BQ25170DSGR
+BQ29706,"BQ29706 single-cell protector, OVP 3.85 V / UVP 2.5 V, WSON-6",U6,WSON-6_DSE,BQ2970,1,TI BQ29706DSER
+PAC1941-1,"PAC1941-1 power monitor with charge accumulator, VQFN-16",U7,VQFN-16_3x3_4MX,PAC1941,1,Microchip PAC1941T-1E/4MX
+TPS63802,"TPS63802 2 A buck-boost, VSON-10",U8,VSON-10_DLA,TPS63802,1,TI TPS63802DLAR
+TPS610997,"TPS610997 5.0 V boost, 1 uA Iq, WSON-6",U9,WSON-6_DRV,TPS61099,1,TI TPS610997DRVR
+RV-3028-C7,"RV-3028-C7 RTC module, 45 nA",U10,RV-3028-C7,RV3028,1,Micro Crystal RV-3028-C7 32.768kHz 1ppm-TA-QC
+ESD2CANFD24,"ESD2CANFD24-Q1 CAN FD ESD protection, SOT-23","U11, U12",SOT-23-3,ESD_CAN,2,TI ESD2CANFD24DBZRQ1
+TPD2E2U06,"TPD2E2U06 2-channel ESD, SC-70",U13,SC-70-3,ESD_2CH,1,TI TPD2E2U06DCKR
+24 MHz,"Crystal, 4-pad package, pads 2 and 4 = case",Y1,XTAL_3225_4P,XTAL_4P,1,Abracon ABM8-24.000MHZ-B2-T

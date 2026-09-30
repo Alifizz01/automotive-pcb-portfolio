@@ -1,0 +1,3 @@
+Layer Pairs Export File for PCB: C:\Users\Nitrox\OneDrive\Desktop\Altium_learn\pcb-portfolio\02-CAN-Test-Runner\hardware\CAN_Test_Runner.PcbDoc
+LayersSetName=Top_Bot_Thru_Holes|DrillFile=can_test_runner-roundholes.txt|DrillLayers=gtl,g1,g2,gbl
+LayersSetName=Top_Bot_Slot_Holes|DrillFile=can_test_runner-slotholes.txt|DrillLayers=gtl,g1,g2,gbl

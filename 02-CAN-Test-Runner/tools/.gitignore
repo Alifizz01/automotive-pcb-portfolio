@@ -17,3 +17,6 @@ route_*.txt
 routes*.txt
 routes_*.pkl
 routes.png
+altium/genout2.pas
+altium/genfab.pas
+altium/temp_json_output.json

@@ -27,7 +27,20 @@ PCB after ECO: 131 components, 516 pads, 0 pad/net mismatches against design.py
 ```
 
 The sheet is laid out in eight titled blocks: vehicle input and buck, charger and power path,
-cell, rails, microcontroller, CAN, USB and SD, display/RTC/buttons.
+cell, rails, microcontroller, CAN, USB and SD, display/RTC/buttons. The whole A1 sheet is in
+`hardware/Project Outputs for CAN_Test_Runner/Schematic Prints.PDF` (vector, zoomable); each
+block is below at readable size.
+
+| Block | |
+|---|---|
+| Vehicle input, protection, 6-32 V to 5 V buck | ![power in](../images/sch-power-in.png) |
+| Charge input OR-ing, LiFePO4 charger, power path | ![charger](../images/sch-charger.png) |
+| Cell, protection, charge counter | ![cell](../images/sch-cell.png) |
+| 3V3 buck-boost, 5 V boost | ![rails](../images/sch-rails.png) |
+| STM32H563 microcontroller | ![mcu](../images/sch-mcu.png) |
+| CAN FD channels 1 and 2 | ![can](../images/sch-can.png) |
+| USB-C device and microSD | ![usb and sd](../images/sch-usb-sd.png) |
+| Display, RTC, buttons, status | ![ui](../images/sch-ui.png) |
 
 ## 2. Part changes against ARCH-002
 
@@ -122,6 +135,8 @@ PDF by `tools/stm32_pins.py` rather than read by eye.
 ## 6. Open items
 
 - The ERC report is still to be committed.
+- Two label collisions on the sheet, cosmetic only (the netlist is correct): at J1/J2 pins 8-9 the
+  GND port text overlaps V1_IN/V2_IN, and at U2/U3 the STBY net label overlaps the 5V_AUX port.
 - The ABM8 load capacitance and the crystal's stray-capacitance estimate must be confirmed on the
   first board (clock output measured against the 30 ppm budget of ER-08).
 - The display's logic inputs are driven at 3.3 V from a 5 V panel; the Sharp specification
