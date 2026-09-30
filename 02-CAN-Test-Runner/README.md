@@ -9,8 +9,10 @@ key-off, and a USB port so the logs come off without touching the card.
 > discussion with an AI assistant. Every figure in them is either derived in the document
 > itself or taken from a cited datasheet, and the design decisions are mine.
 
-**Status:** design in progress. Gate 1 (architecture) complete, including a pin-level
-verification in STM32CubeMX. No schematic, no board, no firmware yet.
+**Status:** schematic captured and board laid out: four layers, 100 x 66 mm, routed, **DRC
+clean with 0 violations**. Fabrication package and firmware not started.
+
+![3D view of the routed board](images/board-3d-top.png)
 
 ---
 
@@ -80,9 +82,9 @@ Details in section 8 of the architecture document.
 | Gate | Covers | State |
 |---|---|---|
 | 1. Architecture | parts, block diagram, power budget, cell chemistry, pin check | **complete** |
-| 1.5. Mechanical integration | enclosure, 3D models, board outline and keep-outs | not started |
-| 2. Schematic | full schematic, ERC clean, traceability | not started |
-| 3. Layout and release | DRC, manufacturing package | not started |
+| 1.5. Mechanical integration | enclosure, 3D models, board outline and keep-outs | outline and 3D models done, enclosure open |
+| 2. Schematic | full schematic, ERC clean, traceability | **captured**, ERC report to commit |
+| 3. Layout and release | DRC, manufacturing package | **layout done, DRC clean**; fab package outstanding |
 | 4. Firmware and proof | firmware, and one PASSED, one FAILED, one INCOMPLETE session | not started |
 
 ## Documents
@@ -91,18 +93,19 @@ Details in section 8 of the architecture document.
 |---|---|
 | [Requirements](docs/01-requirements.md) | What the device must do, and how each requirement gets verified |
 | [Architecture](docs/02-architecture.md) | Parts with reasons, power architecture, cell chemistry, power budget, buffer arithmetic, pin allocation, test file format, open questions |
+| [Schematic](docs/03-schematic.md) | Part changes against the architecture, design values from each datasheet, pin allocation, traceability |
+| [Layout](docs/04-layout.md) | Stack-up, design rules with reasons, placement, routing, DRC report, 3D models, open items |
+
+![Schematic](images/schematic.png)
 
 ## Known limitations at this stage
 
 - **Nothing is built.** Every figure is calculated or from a datasheet. None is measured.
-- **The power chain has first-choice parts but no datasheets yet.** Section 12 of the
-  architecture document names one for each role and why. C-03 blocks Gate 2 until each
-  datasheet is committed.
 - **Wake-up loses the first frame.** The transceiver's low-power receiver wakes the device on
   bus activity, but the frame that did the waking is not itself captured. The wake timestamp
   is recorded instead (Q-5).
-- **Display not chosen.** Reflective memory LCD or colour TFT is a Gate 1.5 decision, and it
-  affects daylight readability, battery life and RAM (Q-3).
+- **No enclosure yet.** The 100 x 66 mm outline was fixed first; the mounting holes must be
+  checked against an enclosure drawing once one is chosen (MR-05).
 
 ---
 

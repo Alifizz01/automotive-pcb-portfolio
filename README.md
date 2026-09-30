@@ -13,7 +13,7 @@ documents, and the datasheets that back the part choices.
 | # | Project | What it is | State |
 |---|---|---|---|
 | 01 | [CAN-FD Sniffer pHAT](01-CAN-Sniffer-HAT/) | A 65 x 30 mm Raspberry Pi Zero 2 W HAT that puts one CAN-FD channel on SPI, for logging and transmitting on a vehicle bus | Schematic and layout complete, DRC clean, not yet fabricated |
-| 02 | [CAN-FD Test Runner](02-CAN-Test-Runner/) | A battery-backed handheld that plugs into OBD-II, runs a test you defined on the SD card for the whole drive, and ends with PASSED, FAILED or INCOMPLETE. Keeps watching after key-off to catch what wakes the bus overnight | Architecture complete and pin-verified, schematic not started |
+| 02 | [CAN-FD Test Runner](02-CAN-Test-Runner/) | A battery-backed handheld that plugs into OBD-II, runs a test you defined on the SD card for the whole drive, and ends with PASSED, FAILED or INCOMPLETE. Keeps watching after key-off to catch what wakes the bus overnight | Schematic captured, 4-layer board routed, DRC clean |
 | 03 | [CAN-FD Hardware Timestamper](03-CAN-Timestamper/) | A two-channel isolated capture board that decodes CAN-FD inside an FPGA, so frames are timestamped at their first edge to 15.6 ns instead of whenever an interrupt is serviced. Both channels share one counter, so timings on one bus can be compared with the other | Architecture complete, package choice verified by place-and-route, schematic not started |
 
 ## How each project is organised

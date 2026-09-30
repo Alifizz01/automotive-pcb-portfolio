@@ -1,0 +1,19 @@
+# scratch output of the scripts and one-off debug scripts
+altium/_full.pas
+altium/*.txt
+!altium/placement.txt
+altium/cellinfo.pas
+altium/cellshort.pas
+altium/fixrest.pas
+altium/gndlink.pas
+altium/polyinfo.pas
+altium/u9info.pas
+altium/fixu9.pas
+altium/fixbt1.pas
+altium/save2.pas
+copper.txt
+pads_*.txt
+route_*.txt
+routes*.txt
+routes_*.pkl
+routes.png
