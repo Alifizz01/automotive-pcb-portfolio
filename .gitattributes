@@ -1,0 +1,5 @@
+# Altium automation scripts (DelphiScript) and generated reports are tooling, not the portfolio's code:
+# keep them out of GitHub's language statistics.
+*.pas linguist-detectable=false
+*.html linguist-generated=true
+**/Project?Outputs?for?*/** linguist-generated=true
