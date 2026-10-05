@@ -9,8 +9,11 @@ one counter, so timings on one bus can be compared with timings on the other.
 > discussion with an AI assistant. Every figure in them is either derived in the document
 > itself or taken from a cited datasheet, and the design decisions are mine.
 
-**Status:** Gate 1 (requirements and architecture) complete. All five opening questions
-closed, two new ones raised and recorded. No schematic, no board yet.
+**Status:** schematic captured (Gate 2) and the 4-layer, 100 x 80 mm board placed and routed, with
+the isolation barrier enforced by keep-out regions and by the netlist checker. **Layout in progress:**
+the design rule check is not clean yet (391 open items, mostly clearance and power-net width; see
+[04-layout.md](docs/04-layout.md#7-design-rule-check-d-04)), so Gate 3 is not passed and no
+fabrication outputs exist for this revision. A portfolio design, not going to be ordered.
 
 **The logic already exists and is verified**, in its own repository:
 [fpga-can-timestamper](https://github.com/Alifizz01/fpga-can-timestamper) — simulated,
@@ -96,16 +99,16 @@ actually say.
 |---|---|
 | [01-requirements.md](docs/01-requirements.md) | REQ-003: what the board must do, and how each item gets verified |
 | [02-architecture.md](docs/02-architecture.md) | Gate 1: parts and why, isolation strategy, power architecture and sequencing, power and link budgets, the timestamp error budget, pin map checked against the RTL |
+| [03-schematic.md](docs/03-schematic.md) | Gate 2: part changes against Gate 1 with reasons, every design value from its datasheet, the supply-return finding that added a power connector, pin allocation checked against the RTL constraint file |
+| [04-layout.md](docs/04-layout.md) | Gate 3: how the isolation barrier is built into placement, routing, pours and DRC; stack-up; rules; DRC report; outputs |
 
 ---
 
 ## What is honestly not done
 
-- No schematic and no PCB. Gate 1 only.
-- The transformer for the isolated supply is chosen in approach but not in part number; its
-  datasheet is not yet committed, and MFR-03 says nothing is decided until it is.
-- The FPGA core current in the power budget is an estimate, not a Lattice Power Calculator
-  result. The budget survives being wrong by 2x, so it does not block Gate 2, but it must be
-  replaced before the regulator thermal design is fixed.
-- Nothing here has been built or measured. Every number is either derived in the documents
-  or cited from a datasheet.
+- Nothing has been built or measured. Every number is either derived in the documents or cited
+  from a datasheet.
+- Q-6 (8 Mbaud UART constant) and Q-7 (Lattice Power Calculator) are open in the logic repository
+  and the architecture document; neither changes the copper.
+- The bring-up procedure (deliverable 6) is written once there is a board to bring up.
+- The fabrication drawing of MFR-04 is not drawn; the stack-up it would state is in 04-layout.md.
