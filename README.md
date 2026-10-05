@@ -1,4 +1,9 @@
-<h1 align="center">Automotive PCB portfolio</h1>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
+    <img src="assets/logo.svg" alt="PCB Portfolio" width="400">
+  </picture>
+</p>
 
 <p align="center">
   <b>Three CAN-FD tools for vehicle networks, designed end to end in Altium Designer:<br>
